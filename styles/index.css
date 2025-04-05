@@ -107,6 +107,7 @@ body {
     border: 1rem solid black;
     border-radius: 8px;
     overflow: hidden;
+    transform: scaleX(-1);
 }
 
 .button-container {
