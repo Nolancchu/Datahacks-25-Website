@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const retryBtn = document.getElementById('retry-btn');
     const sendBtn = document.getElementById('send-btn');
     const statusMessage = document.getElementById('status');
+
+    const images = document.getElementsByTagName('img');
     
     // Image data storage
     let imageData = null;
@@ -52,7 +54,8 @@ document.addEventListener('DOMContentLoaded', function() {
         capturedImage.src = imageData;
     
         // Show result container
-        resultContainer.style.display = 'block';
+        resultContainer.style.display = 'flex';
+        resultContainer.style.flexDirection = 'column';
     
         // Hide camera view (optional - remove if you want to keep the camera visible)
         document.querySelector('.camera-container').style.display = 'none';
@@ -77,8 +80,8 @@ document.addEventListener('DOMContentLoaded', function() {
             statusMessage.textContent = 'No image to send. Please take a photo first.';
             return;
         }
-    
-        statusMessage.textContent = 'Preparing to send photo... (POST request not implemented yet)';
+        
+        statusMessage.textContent = `Preparing to send photo with url...(POST request not implemented yet)`;
     
         // The following code would be used for implementation of a POST request:
         /*
@@ -101,6 +104,37 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error:', error);
         });
         */
+
+        // try {
+        //     const response = fetch('your-api-endpoint', {
+        //         method: 'POST',
+        //         body: formData
+        //     });
+
+        //     // Retrieve result data from API
+        //     const results = response.json();
+
+        //     const topMatchImg = results.image1;
+        //     const topMatchName = results.name1;
+        //     const secondMatchImg = results.image2;
+        //     const secondMatchName = results.name2;
+        //     const thirdMatchImg = results.image3;
+        //     const thirdMatchName = results.name3;
+
+        //     images[0].src = topMatchImg;
+        //     images[1].src = secondMatchImg;
+        //     images[2].src = thirdMatchImg
+        //     images[3].src = capturedImage.src;
+
+        //     document.getElementById('name1').textContent = topMatchName;
+        //     document.getElementById('name2').textContent = secondMatchName;
+        //     document.getElementById('name3').textContent = thirdMatchName;
+
+
+        // } catch (err) {
+        //     statusMessage.textContent = 'Failed to upload photo. Please try again.';
+        //     console.error('Error:', err);
+        // }
     
         // Helper function to convert base64 to blob
         function dataURItoBlob(dataURI) {
@@ -118,9 +152,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Event listeners
-    // captureBtn.addEventListener('click', capturePhoto);
-    // retryBtn.addEventListener('click', retryCapture);
-    // sendBtn.addEventListener('click', sendPhoto);
+    captureBtn.addEventListener('click', capturePhoto);
+    retryBtn.addEventListener('click', retryCapture);
+    sendBtn.addEventListener('click', sendPhoto);
     
     // Start camera when page loads
     window.addEventListener('load', initCamera);

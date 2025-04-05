@@ -1,0 +1,16 @@
+body {
+    background-color: #e6b1c7;
+}
+
+picture > img {
+    background-color: white;
+    border: 5px solid black;
+}
+
+.result-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;;
+    align-items: center;
+    justify-content: center;
+}
