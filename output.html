@@ -8,7 +8,7 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #c48eb0;
+            background-color: #e6b1c7;
             font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
@@ -39,6 +39,7 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            position: relative;
         }
 
         .name {
@@ -52,7 +53,7 @@
         .bottom-row {
             display: flex;
             width: 100%;
-            justify-content: space-between;
+            justify-content: space-evenly;
             margin-bottom: 20px;
         }
 
@@ -72,9 +73,8 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            position: relative;
         }
-
-
 
         .small-name {
             font-size: 16px;
@@ -97,8 +97,8 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            position: relative;
         }
-
 
         .you-text {
             font-size: 24px;
@@ -108,7 +108,7 @@
         .footer {
             width: 100%;
             display: flex;
-            justify-content: space-between;
+            justify-content: space-evenly;
             align-items: center;
             margin-top: 10px;
         }
@@ -143,6 +143,28 @@
             font-weight: bold;
         }
 
+        .save-button {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .large-box:hover .save-button,
+        .small-box:hover .save-button,
+        .you-box:hover .save-button {
+            opacity: 1;
+        }
+
         @media (max-width: 500px) {
             .small-box {
                 width: 80px;
@@ -169,6 +191,11 @@
             .again-button {
                 font-size: 18px;
             }
+
+            .save-button {
+                padding: 3px 6px;
+                font-size: 10px;
+            }
         }
     </style>
 </head>
@@ -180,6 +207,7 @@
             <div class="large-oval">
                 <img id="image1" src="/api/placeholder/400/400" alt="Person 1">
             </div>
+            <button class="save-button" data-image="image1" data-name="name1">Save</button>
         </div>
         
         <div class="name" id="name1">1. Loading...</div>
@@ -189,8 +217,9 @@
                 <div class="small-box-container">
                     <div class="small-box">
                         <div class="small-oval">
-                            <img id="image2" src="/api/placeholder/100/100" alt="Person 2">
+                            <img id="image2" src="/api/placeholder/100/100" alt="Person 2" height="105" width="100">
                         </div>
+                        <button class="save-button" data-image="image2" data-name="name2">Save</button>
                     </div>
                     <div class="small-name" id="name2">2. Loading...</div>
                 </div>
@@ -198,8 +227,9 @@
                 <div class="small-box-container" style="margin-top: 20px;">
                     <div class="small-box">
                         <div class="small-oval">
-                            <img id="image3" src="/api/placeholder/100/100" alt="Person 3">
+                            <img id="image3" src="/api/placeholder/100/100" alt="Person 3" height="105" width="100">
                         </div>
+                        <button class="save-button" data-image="image3" data-name="name3">Save</button>
                     </div>
                     <div class="small-name" id="name3">3. Loading...</div>
                 </div>
@@ -208,8 +238,9 @@
             <div class="you-container">
                 <div class="you-box">
                     <div class="you-oval">
-                        <img id="imageYou" src="/api/placeholder/200/200" alt="You">
+                        <img id="imageYou" src="/api/placeholder/200/200" alt="You" height="185" width="180">
                     </div>
+                    <button class="save-button" data-image="imageYou" data-name="you">Save</button>
                 </div>
                 <div class="you-text">You</div>
             </div>
@@ -217,7 +248,7 @@
         
         <div class="footer">
             <div class="website">getavirus.com</div>
-            <a href="index.html">Again?</button>
+            <a href="index.html" id="againButton">Again?</a>
         </div>
     </div>
 
@@ -235,6 +266,7 @@
         const name2Element = document.getElementById('name2');
         const name3Element = document.getElementById('name3');
         const againButton = document.getElementById('againButton');
+        const saveButtons = document.querySelectorAll('.save-button');
         
         // Function to fetch data from API
         async function fetchImages() {
@@ -282,9 +314,67 @@
             }
         }
         
+        // Function to download image
+        async function downloadImage(imageId, nameId) {
+            const imageElement = document.getElementById(imageId);
+            const nameElement = document.getElementById(nameId);
+            const imageSrc = imageElement.src;
+            
+            if (!imageSrc || imageSrc.includes('placeholder')) {
+                alert('Image is not available for download yet.');
+                return;
+            }
+
+            try {
+                // Get the image name from the element or use a default name
+                let imageName = 'image';
+                if (nameElement) {
+                    // Extract the name part without the number prefix
+                    const nameText = nameElement.textContent;
+                    const nameParts = nameText.split('. ');
+                    if (nameParts.length > 1) {
+                        imageName = nameParts[1].trim();
+                    }
+                } else if (imageId === 'imageYou') {
+                    imageName = 'You';
+                }
+                
+                // Create a temporary anchor element to trigger download
+                const response = await fetch(imageSrc);
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                
+                const downloadLink = document.createElement('a');
+                downloadLink.href = blobUrl;
+                downloadLink.download = `${imageName}.jpg`; // You can adjust the file extension based on your actual image type
+                
+                // Trigger the download
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                
+                // Clean up
+                URL.revokeObjectURL(blobUrl);
+            } catch (error) {
+                console.error('Error downloading image:', error);
+                alert('Failed to download the image. Please try again.');
+            }
+        }
+        
         // Event Listeners
-        document.addEventListener('DOMContentLoaded', fetchImages);
-        againButton.addEventListener('click', fetchImages);
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchImages();
+            
+            // Add event listeners to all save buttons
+            saveButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Prevent event bubbling
+                    const imageId = this.getAttribute('data-image');
+                    const nameId = this.getAttribute('data-name');
+                    downloadImage(imageId, nameId);
+                });
+            });
+        });
         
         // Optional: You can add a function to handle user uploads if needed
         function uploadUserImage(file) {
