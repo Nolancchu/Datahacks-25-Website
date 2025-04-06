@@ -75,13 +75,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Send photo (placeholder for future implementation)
-    function sendPhoto() {
+    async function sendPhoto() {
         if (!imageData) {
             statusMessage.textContent = 'No image to send. Please take a photo first.';
             return;
         }
         
-        statusMessage.textContent = `Preparing to send photo with url...(POST request not implemented yet)`;
+        statusMessage.textContent = `Preparing to send photo with url ${capturedImage.src} POST request not implemented yet)`;
     
         // The following code would be used for implementation of a POST request:
         /*
@@ -104,51 +104,52 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error:', error);
         });
         */
+        let base64Image = capturedImage.src.split('base64,')[1];
+        console.log(base64Image);
 
-        // try {
-        //     const response = fetch('your-api-endpoint', {
-        //         method: 'POST',
-        //         body: formData
-        //     });
+        try {
+            const response = await fetch('https://facialrec.gavmere.me/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'image': base64Image,
+                    'top_n': 3,
+                    'min_similarity': 0.01
+                }),
+            });
 
-        //     // Retrieve result data from API
-        //     const results = response.json();
+            // Retrieve result data from API
+            // const results = response.json();
+            const results = await response.json();
+            localStorage.setItem('results', JSON.stringify(results));
+            localStorage.setItem('you', base64Image);
+            console.log(results);
 
-        //     const topMatchImg = results.image1;
-        //     const topMatchName = results.name1;
-        //     const secondMatchImg = results.image2;
-        //     const secondMatchName = results.name2;
-        //     const thirdMatchImg = results.image3;
-        //     const thirdMatchName = results.name3;
+            // const topMatchImg = results[0].Image;
+            // const topMatchName = results[0].FirstName + ' ' + results[0].LastName;
+            // const secondMatchImg = results[1].Image;
+            // const secondMatchName = results[1].FirstName + ' ' + results[1].LastName;
+            // const thirdMatchImg = results[2].Image;
+            // const thirdMatchName = results[2].FirstName + ' ' + results[2].LastName;
 
-        //     images[0].src = topMatchImg;
-        //     images[1].src = secondMatchImg;
-        //     images[2].src = thirdMatchImg
-        //     images[3].src = capturedImage.src;
+            // images[0].src = topMatchImg;
+            // images[1].src = secondMatchImg;
+            // images[2].src = thirdMatchImg
+            // images[3].src = capturedImage.src;
 
-        //     document.getElementById('name1').textContent = topMatchName;
-        //     document.getElementById('name2').textContent = secondMatchName;
-        //     document.getElementById('name3').textContent = thirdMatchName;
+            // document.getElementById('name1').textContent = topMatchName;
+            // document.getElementById('name2').textContent = secondMatchName;
+            // document.getElementById('name3').textContent = thirdMatchName;
 
 
-        // } catch (err) {
-        //     statusMessage.textContent = 'Failed to upload photo. Please try again.';
-        //     console.error('Error:', err);
-        // }
-    
-        // Helper function to convert base64 to blob
-        function dataURItoBlob(dataURI) {
-            const byteString = atob(dataURI.split(',')[1]);
-            const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-            const ab = new ArrayBuffer(byteString.length);
-            const ia = new Uint8Array(ab);
-    
-            for (let i = 0; i < byteString.length; i++) {
-                ia[i] = byteString.charCodeAt(i);
-            }
-    
-            return new Blob([ab], { type: mimeString });
+        } catch (err) {
+            statusMessage.textContent = 'Failed to upload photo. Please try again.';
+            console.error('Error:', err);
         }
+
+        window.location.href = './output.html';
     }
     
     // Event listeners

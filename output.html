@@ -159,6 +159,10 @@
             transition: opacity 0.3s;
         }
 
+        #imageYou {
+            overflow: hidden;
+        }
+
         .large-box:hover .save-button,
         .small-box:hover .save-button,
         .you-box:hover .save-button {
@@ -200,12 +204,12 @@
     </style>
 </head>
 <body>
-    <div id="loading" class="loading">Loading...</div>
+    <!-- <div id="loading" class="loading">Loading...</div> -->
     
     <div class="container">
         <div class="large-box">
             <div class="large-oval">
-                <img id="image1" src="/api/placeholder/400/400" alt="Person 1">
+                <img id="image1" src="" alt="Person 1">
             </div>
             <button class="save-button" data-image="image1" data-name="name1">Save</button>
         </div>
@@ -217,7 +221,7 @@
                 <div class="small-box-container">
                     <div class="small-box">
                         <div class="small-oval">
-                            <img id="image2" src="/api/placeholder/100/100" alt="Person 2" height="105" width="100">
+                            <img id="image2" src="" alt="Person 2" height="105" width="100">
                         </div>
                         <button class="save-button" data-image="image2" data-name="name2">Save</button>
                     </div>
@@ -227,7 +231,7 @@
                 <div class="small-box-container" style="margin-top: 20px;">
                     <div class="small-box">
                         <div class="small-oval">
-                            <img id="image3" src="/api/placeholder/100/100" alt="Person 3" height="105" width="100">
+                            <img id="image3" src="" alt="Person 3" height="105" width="100">
                         </div>
                         <button class="save-button" data-image="image3" data-name="name3">Save</button>
                     </div>
@@ -238,7 +242,7 @@
             <div class="you-container">
                 <div class="you-box">
                     <div class="you-oval">
-                        <img id="imageYou" src="/api/placeholder/200/200" alt="You" height="185" width="180">
+                        <img id="imageYou" src="" alt="You" height="185" width="180">
                     </div>
                     <button class="save-button" data-image="imageYou" data-name="you">Save</button>
                 </div>
@@ -268,133 +272,32 @@
         const againButton = document.getElementById('againButton');
         const saveButtons = document.querySelectorAll('.save-button');
         
-        // Function to fetch data from API
-        async function fetchImages() {
-            loadingElement.style.display = 'flex';
-            
-            try {
-                const response = await fetch(API_URL);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                updateUI(data);
-            } catch (error) {
-                console.error('Error fetching images:', error);
-                alert('Failed to load images. Please try again.');
-            } finally {
-                loadingElement.style.display = 'none';
-            }
-        }
-        
-        // Function to update UI with received data
-        function updateUI(data) {
-            // Update images
-            if (data.images) {
-                if (data.images.person1) {
-                    image1Element.src = data.images.person1;
-                    name1Element.textContent = `1. ${data.names?.person1 || 'Person 1'}`;
-                }
-                
-                if (data.images.person2) {
-                    image2Element.src = data.images.person2;
-                    name2Element.textContent = `2. ${data.names?.person2 || 'Person 2'}`;
-                }
-                
-                if (data.images.person3) {
-                    image3Element.src = data.images.person3;
-                    name3Element.textContent = `3. ${data.names?.person3 || 'Person 3'}`;
-                }
-                
-                if (data.images.you) {
-                    imageYouElement.src = data.images.you;
-                }
-            }
-        }
-        
-        // Function to download image
-        async function downloadImage(imageId, nameId) {
-            const imageElement = document.getElementById(imageId);
-            const nameElement = document.getElementById(nameId);
-            const imageSrc = imageElement.src;
-            
-            if (!imageSrc || imageSrc.includes('placeholder')) {
-                alert('Image is not available for download yet.');
-                return;
-            }
-
-            try {
-                // Get the image name from the element or use a default name
-                let imageName = 'image';
-                if (nameElement) {
-                    // Extract the name part without the number prefix
-                    const nameText = nameElement.textContent;
-                    const nameParts = nameText.split('. ');
-                    if (nameParts.length > 1) {
-                        imageName = nameParts[1].trim();
-                    }
-                } else if (imageId === 'imageYou') {
-                    imageName = 'You';
-                }
-                
-                // Create a temporary anchor element to trigger download
-                const response = await fetch(imageSrc);
-                const blob = await response.blob();
-                const blobUrl = URL.createObjectURL(blob);
-                
-                const downloadLink = document.createElement('a');
-                downloadLink.href = blobUrl;
-                downloadLink.download = `${imageName}.jpg`; // You can adjust the file extension based on your actual image type
-                
-                // Trigger the download
-                document.body.appendChild(downloadLink);
-                downloadLink.click();
-                document.body.removeChild(downloadLink);
-                
-                // Clean up
-                URL.revokeObjectURL(blobUrl);
-            } catch (error) {
-                console.error('Error downloading image:', error);
-                alert('Failed to download the image. Please try again.');
-            }
-        }
-        
         // Event Listeners
         document.addEventListener('DOMContentLoaded', function() {
-            fetchImages();
+            // fetchImages();
             
-            // Add event listeners to all save buttons
-            saveButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.stopPropagation(); // Prevent event bubbling
-                    const imageId = this.getAttribute('data-image');
-                    const nameId = this.getAttribute('data-name');
-                    downloadImage(imageId, nameId);
-                });
-            });
+            // // Add event listeners to all save buttons
+            // saveButtons.forEach(button => {
+            //     button.addEventListener('click', function(e) {
+            //         e.stopPropagation(); // Prevent event bubbling
+            //         const imageId = this.getAttribute('data-image');
+            //         const nameId = this.getAttribute('data-name');
+            //         downloadImage(imageId, nameId);
+            //     });
+            // });
+            let results = JSON.parse(localStorage.getItem('results')).results;
+            console.log(results[0].Image);
+            image1Element.src = `data:image/png;base64,${results[0].Image}`;
+            name1Element.textContent = `1. ${results[0].FirstName + ' ' + results[0].LastName || 'Person 1'}`;
+            
+            image2Element.src = `data:image/png;base64,${results[1].Image}`;
+            name2Element.textContent = `2. ${results[1].FirstName + ' ' + results[1].LastName || 'Person 2'}`;
+            
+            image3Element.src = `data:image/png;base64,${results[2].Image}`;
+            name3Element.textContent = `3. ${results[2].FirstName + ' ' + results[2].LastName || 'Person 3'}`;
+            
+            imageYouElement.src = `data:image/png;base64,${localStorage.getItem('you')}`;
         });
-        
-        // Optional: You can add a function to handle user uploads if needed
-        function uploadUserImage(file) {
-            const formData = new FormData();
-            formData.append('userImage', file);
-            
-            fetch('/api/uploadImage', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.imageUrl) {
-                    imageYouElement.src = data.imageUrl;
-                }
-            })
-            .catch(error => {
-                console.error('Error uploading image:', error);
-            });
-        }
     </script>
 </body>
 </html>
