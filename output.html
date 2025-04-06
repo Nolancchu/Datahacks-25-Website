@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <title>getavirus.com</title>
     <style>
         body {
@@ -114,59 +115,50 @@
         }
 
         .website {
-            font-size: 24px;
+            font-size: 16px;
             font-weight: bold;
         }
 
-        .again-button {
-            background-color: #e0e0e0;
-            border: 3px solid black;
+        #againButton {
+            background-color: #45a049;
+            text-decoration: none;
+            color: white;
             padding: 10px 20px;
-            font-size: 20px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .loading {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(196, 142, 176, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .save-button {
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            background-color: rgba(0, 0, 0, 0.6);
-            color: white;
             border: none;
             border-radius: 4px;
-            padding: 5px 8px;
-            font-size: 12px;
             cursor: pointer;
-            z-index: 10;
-            opacity: 0;
-            transition: opacity 0.3s;
+            font-size: 16px;
         }
 
         #imageYou {
             overflow: hidden;
         }
 
-        .large-box:hover .save-button,
-        .small-box:hover .save-button,
-        .you-box:hover .save-button {
-            opacity: 1;
+        #screen-capture {
+            background-color: #e6b1c7;
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+        }
+
+        #logo {
+            margin-top: -1.5rem;
+            margin-bottom: -1.5rem;
+            align-self: center;
+        }
+
+        #saveButton {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #button-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 1rem;
         }
 
         @media (max-width: 500px) {
@@ -189,71 +181,68 @@
             }
             
             .you-text, .website {
-                font-size: 20px;
+                font-size: 12px;
             }
             
-            .again-button {
+            #againButton {
                 font-size: 18px;
-            }
-
-            .save-button {
-                padding: 3px 6px;
-                font-size: 10px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- <div id="loading" class="loading">Loading...</div> -->
-    
-    <div class="container">
-        <div class="large-box">
-            <div class="large-oval">
-                <img id="image1" src="" alt="Person 1">
-            </div>
-            <button class="save-button" data-image="image1" data-name="name1">Save</button>
-        </div>
+    <div id="screen-capture">
+
+        <img id="logo" src="./public/LIKE-ME-Logo-up.png" alt="logo" height="200" width="250">
         
-        <div class="name" id="name1">1. Loading...</div>
-        
-        <div class="bottom-row">
-            <div class="left-column">
-                <div class="small-box-container">
-                    <div class="small-box">
-                        <div class="small-oval">
-                            <img id="image2" src="" alt="Person 2" height="105" width="100">
-                        </div>
-                        <button class="save-button" data-image="image2" data-name="name2">Save</button>
-                    </div>
-                    <div class="small-name" id="name2">2. Loading...</div>
-                </div>
-                
-                <div class="small-box-container" style="margin-top: 20px;">
-                    <div class="small-box">
-                        <div class="small-oval">
-                            <img id="image3" src="" alt="Person 3" height="105" width="100">
-                        </div>
-                        <button class="save-button" data-image="image3" data-name="name3">Save</button>
-                    </div>
-                    <div class="small-name" id="name3">3. Loading...</div>
+        <div class="container">
+            <div class="large-box">
+                <div class="large-oval">
+                    <img id="image1" src="" alt="Person 1">
                 </div>
             </div>
             
-            <div class="you-container">
-                <div class="you-box">
-                    <div class="you-oval">
-                        <img id="imageYou" src="" alt="You" height="185" width="180">
+            <div class="name" id="name1">1. Loading...</div>
+            
+            <div class="bottom-row">
+                <div class="left-column">
+                    <div class="small-box-container">
+                        <div class="small-box">
+                            <div class="small-oval">
+                                <img id="image2" src="" alt="Person 2" height="105" width="100">
+                            </div>
+                        </div>
+                        <div class="small-name" id="name2">2. Loading...</div>
                     </div>
-                    <button class="save-button" data-image="imageYou" data-name="you">Save</button>
+                    
+                    <div class="small-box-container" style="margin-top: 20px;">
+                        <div class="small-box">
+                            <div class="small-oval">
+                                <img id="image3" src="" alt="Person 3" height="105" width="100">
+                            </div>
+                        </div>
+                        <div class="small-name" id="name3">3. Loading...</div>
+                    </div>
                 </div>
-                <div class="you-text">You</div>
+                
+                <div class="you-container">
+                    <div class="you-box">
+                        <div class="you-oval">
+                            <img id="imageYou" src="" alt="You" height="185" width="180">
+                        </div>
+                    </div>
+                    <div class="you-text">You</div>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <div class="website">https://tinyurl.com/2hsdrs7k</div>
             </div>
         </div>
-        
-        <div class="footer">
-            <div class="website">getavirus.com</div>
-            <a href="index.html" id="againButton">Again?</a>
-        </div>
+    </div>
+    <div id="button-container">
+        <button id="saveButton">Save</button>
+        <a href="index.html" id="againButton">Again?</a>
     </div>
 
     <script>
@@ -270,23 +259,16 @@
         const name2Element = document.getElementById('name2');
         const name3Element = document.getElementById('name3');
         const againButton = document.getElementById('againButton');
-        const saveButtons = document.querySelectorAll('.save-button');
+        const captureSection = document.getElementById('screen-capture');
         
         // Event Listeners
         document.addEventListener('DOMContentLoaded', function() {
-            // fetchImages();
-            
-            // // Add event listeners to all save buttons
-            // saveButtons.forEach(button => {
-            //     button.addEventListener('click', function(e) {
-            //         e.stopPropagation(); // Prevent event bubbling
-            //         const imageId = this.getAttribute('data-image');
-            //         const nameId = this.getAttribute('data-name');
-            //         downloadImage(imageId, nameId);
-            //     });
-            // });
+            let captureWidth = document.getElementById("screen-capture").offsetWidth;
+
+            document.getElementById("button-container").style.width = captureWidth + "px";
+
             let results = JSON.parse(localStorage.getItem('results')).results;
-            console.log(results[0].Image);
+
             image1Element.src = `data:image/png;base64,${results[0].Image}`;
             name1Element.textContent = `1. ${results[0].FirstName + ' ' + results[0].LastName || 'Person 1'}`;
             
@@ -297,6 +279,23 @@
             name3Element.textContent = `3. ${results[2].FirstName + ' ' + results[2].LastName || 'Person 3'}`;
             
             imageYouElement.src = `data:image/png;base64,${localStorage.getItem('you')}`;
+
+            document.getElementById("saveButton").addEventListener("click", function() {
+            var captureSection = document.getElementById("screen-capture");
+
+            html2canvas(captureSection).then(function(canvas) {
+                // Create an image from the canvas
+                var image = canvas.toDataURL("image/png");
+
+                // Create a link element to trigger the download
+                var link = document.createElement("a");
+                link.href = image;
+                link.download = "captured_image.png";
+
+                // Simulate a click on the link to download the image
+                link.click();
+            });
+        });
         });
     </script>
 </body>

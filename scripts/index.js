@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const capturedImage = document.getElementById('captured-image');
     const retryBtn = document.getElementById('retry-btn');
     const sendBtn = document.getElementById('send-btn');
+    const noResultsBtn = document.getElementById('no-results-btn');
     const statusMessage = document.getElementById('status');
 
     const images = document.getElementsByTagName('img');
@@ -76,13 +77,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Send photo (placeholder for future implementation)
     async function sendPhoto() {
-        if (!imageData) {
-            statusMessage.textContent = 'No image to send. Please take a photo first.';
-            return;
-        }
-        
-        statusMessage.textContent = `Preparing to send photo with url ${capturedImage.src} POST request not implemented yet)`;
-    
         // The following code would be used for implementation of a POST request:
         /*
         const formData = new FormData();
@@ -105,10 +99,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         */
         let base64Image = capturedImage.src.split('base64,')[1];
-        console.log(base64Image);
+        let response, results;
 
         try {
-            const response = await fetch('https://facialrec.gavmere.me/search', {
+            response = await fetch('https://facialrec.gavmere.me/search', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -122,10 +116,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Retrieve result data from API
             // const results = response.json();
-            const results = await response.json();
+            results = await response.json();
             localStorage.setItem('results', JSON.stringify(results));
             localStorage.setItem('you', base64Image);
-            console.log(results);
 
             // const topMatchImg = results[0].Image;
             // const topMatchName = results[0].FirstName + ' ' + results[0].LastName;
@@ -142,20 +135,35 @@ document.addEventListener('DOMContentLoaded', function() {
             // document.getElementById('name1').textContent = topMatchName;
             // document.getElementById('name2').textContent = secondMatchName;
             // document.getElementById('name3').textContent = thirdMatchName;
-
-
         } catch (err) {
+            document.getElementById('blur').style.display = 'fixed';
+            document.getElementById('no-results').style.display = 'flex';
             statusMessage.textContent = 'Failed to upload photo. Please try again.';
             console.error('Error:', err);
         }
 
-        window.location.href = './output.html';
+        const isEmpty = response.results;
+        const hasError = results?.detail?.includes('Error');
+
+        if (isEmpty || hasError) {
+            document.getElementById('blur').style.display = 'block';
+            document.getElementById('no-results').style.display = 'flex';
+        } else {
+            window.location.href = './output.html';
+        }
+    }
+
+    function resetPopup() {
+        document.getElementById('blur').style.display = 'none';
+        document.getElementById('no-results').style.display = 'none';
+        retryBtn.click();
     }
     
     // Event listeners
     captureBtn.addEventListener('click', capturePhoto);
     retryBtn.addEventListener('click', retryCapture);
     sendBtn.addEventListener('click', sendPhoto);
+    noResultsBtn.addEventListener('click', resetPopup);
     
     // Start camera when page loads
     window.addEventListener('load', initCamera);
