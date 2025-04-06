@@ -61,6 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
         // Hide camera view (optional - remove if you want to keep the camera visible)
         document.querySelector('.camera-container').style.display = 'none';
+        document.getElementById('warning').style.display = 'none';
         captureBtn.style.display = 'none';
     }
     
@@ -70,6 +71,8 @@ document.addEventListener('DOMContentLoaded', function() {
         resultContainer.style.display = 'none';
         document.querySelector('.camera-container').style.display = 'block';
         captureBtn.style.display = 'block';
+        document.getElementById('warning').style.display = 'block';
+
     
         // Clear previous image data
         imageData = null;
@@ -136,9 +139,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // document.getElementById('name2').textContent = secondMatchName;
             // document.getElementById('name3').textContent = thirdMatchName;
         } catch (err) {
-            document.getElementById('blur').style.display = 'fixed';
+            document.getElementById('blur').style.display = 'block';
             document.getElementById('no-results').style.display = 'flex';
-            statusMessage.textContent = 'Failed to upload photo. Please try again.';
             console.error('Error:', err);
         }
 

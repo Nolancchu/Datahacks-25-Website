@@ -171,6 +171,40 @@
             margin: 1rem;
         }
 
+        #resultsImageContainer {
+            display: none;
+            background-color: #e893b6;
+            border-radius: 10px;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            height: auto;
+            width: auto;
+            padding: 2rem 2rem;
+            z-index: 10;
+        }
+
+        #resultsImage {
+            height: 70vh;
+            border-radius: 15px;
+            margin: 20px auto;
+            max-width: 100%;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        #blur {
+            display: none;
+            position: absolute;
+            height: 100vh;
+            width: 100vw;
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
         @media (max-width: 500px) {
             .small-box {
                 width: 80px;
@@ -212,7 +246,7 @@
                 </div>
             </div>
             
-            <div class="name" id="name1">1. Loading...</div>
+            <div class="name" id="name1">1. ____</div>
             
             <div class="bottom-row">
                 <div class="left-column">
@@ -222,7 +256,7 @@
                                 <img id="image2" src="" alt="Person 2" height="105" width="100">
                             </div>
                         </div>
-                        <div class="small-name" id="name2">2. Loading...</div>
+                        <div class="small-name" id="name2">2. ____</div>
                     </div>
                     
                     <div class="small-box-container" style="margin-top: 20px;">
@@ -231,7 +265,7 @@
                                 <img id="image3" src="" alt="Person 3" height="105" width="100">
                             </div>
                         </div>
-                        <div class="small-name" id="name3">3. Loading...</div>
+                        <div class="small-name" id="name3">3. ____</div>
                     </div>
                 </div>
                 
@@ -255,10 +289,13 @@
         <a href="index.html" id="againButton">Again?</a>
     </div>
 
+    <div id="resultsImageContainer">
+        <img id="resultsImage" alt="Captured Screenshot">
+    </div>
+
+    <div id="blur"></div>
+
     <script>
-        // Configuration
-        const API_URL = 'http://localhost:3000/api/getImages'; // Replace with your actual API endpoint
-        
         // DOM Elements
         const loadingElement = document.getElementById('loading');
         const image1Element = document.getElementById('image1');
@@ -291,21 +328,22 @@
             imageYouElement.src = `data:image/png;base64,${localStorage.getItem('you')}`;
 
             document.getElementById("saveButton").addEventListener("click", function() {
-            var captureSection = document.getElementById("screen-capture");
+                var captureSection = document.getElementById("screen-capture");
+                document.getElementById('blur').style.display = 'block';
 
-            html2canvas(captureSection).then(function(canvas) {
-                // Create an image from the canvas
-                var image = canvas.toDataURL("image/png");
+                html2canvas(captureSection, { scale: 1 }).then(function(canvas) {
+                    // Create an image from the canvas
+                    var image = canvas.toDataURL("image/png");
 
-                // Create a link element to trigger the download
-                var link = document.createElement("a");
-                link.href = image;
-                link.download = "captured_image.png";
-
-                // Simulate a click on the link to download the image
-                link.click();
+                    document.getElementById('resultsImage').src = image;
+                    document.getElementById('resultsImageContainer').style.display = 'flex';
+                });
             });
-        });
+
+            document.getElementById('blur').addEventListener('click', function() {
+                document.getElementById('blur').style.display = 'none';
+                document.getElementById('resultsImageContainer').style.display = 'none';
+            });
         });
     </script>
 </body>
