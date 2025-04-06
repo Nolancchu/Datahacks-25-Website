@@ -229,5 +229,6 @@ body {
 @media screen and (width <= 640px) {
     #resultsImageContainer {
         width: 80%;
+        height: 60%;
     }
 }
