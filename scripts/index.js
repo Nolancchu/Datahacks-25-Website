@@ -20,8 +20,8 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: {
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 },
+                    width: { ideal: 320 },
+                    height: { ideal: 320 },
                     facingMode: 'user'
                 },
                 audio: false
@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function capturePhoto() {
         // Draw current video frame to canvas
         const context = canvas.getContext('2d');
+        console.log(canvas.width, canvas.height);
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
     
         // Get image data and display it
@@ -69,7 +70,6 @@ document.addEventListener('DOMContentLoaded', function() {
         resultContainer.style.display = 'none';
         document.querySelector('.camera-container').style.display = 'block';
         captureBtn.style.display = 'block';
-        statusMessage.textContent = '';
     
         // Clear previous image data
         imageData = null;

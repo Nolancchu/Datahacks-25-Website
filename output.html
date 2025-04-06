@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <title>getavirus.com</title>
+    <title>Like Me</title>
     <style>
         body {
             margin: 0;
@@ -88,6 +88,13 @@
             align-items: center;
         }
 
+        .you-oval {
+            width: 180px; 
+            height: 180px;
+            overflow: hidden;
+            transform: scaleX(-1);
+        }
+
         .you-box {
             width: 180px;
             height: 180px;
@@ -131,7 +138,10 @@
         }
 
         #imageYou {
-            overflow: hidden;
+            object-fit: cover; 
+            width: 100%; 
+            height: 100%; 
+            object-position: center;
         }
 
         #screen-capture {
@@ -228,7 +238,7 @@
                 <div class="you-container">
                     <div class="you-box">
                         <div class="you-oval">
-                            <img id="imageYou" src="" alt="You" height="185" width="180">
+                            <img id="imageYou" src="" alt="You">
                         </div>
                     </div>
                     <div class="you-text">You</div>
