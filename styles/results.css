@@ -165,6 +165,7 @@ body {
 
 #resultsImageContainer {
     display: none;
+    flex-direction: column;
     background-color: #e893b6;
     border-radius: 10px;
     justify-content: center;
