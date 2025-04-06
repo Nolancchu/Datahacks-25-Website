@@ -87,6 +87,7 @@ body {
 
 #warning {
     margin-bottom: 1.5rem;
+    text-align: center;
 }
 
 #capture-btn:hover {
